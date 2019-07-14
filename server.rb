@@ -1,6 +1,7 @@
 require 'sinatra'
 require "sinatra/reloader" if development?
 require 'digest/sha1'
+require 'json'
 
 OBJECTS_DIR_PATH = './objects'
 MAIN_BRANCH_NAME = 'master'
@@ -28,6 +29,20 @@ def read_file(name)
   end
 end
 
+def add_file(name, key, val)
+  raise 'resource not found' unless exist_resource?(name)
+
+  json = nil
+  File.open(resource_path(name), 'r') do |f|
+    json = JSON.parse(f.read)
+  end
+  json[key] = val
+
+  File.open(resource_path(name), 'w') do |f|
+    f.write(json.to_json)
+  end
+end
+
 get '/' do
   'Hello world!'
 end
@@ -41,5 +56,7 @@ get '/:name/add' do
 end
 
 post '/:name/post' do
+  add_file(params[:name], params[:key], params[:value])
+
   "#{params[:name]} #{params[:key]} #{params[:value]}"
 end
