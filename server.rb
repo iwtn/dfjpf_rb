@@ -58,5 +58,5 @@ end
 post '/:name/post' do
   add_file(params[:name], params[:key], params[:value])
 
-  "#{params[:name]} #{params[:key]} #{params[:value]}"
+  redirect "/#{params[:name]}", 303
 end
