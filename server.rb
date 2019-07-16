@@ -53,7 +53,7 @@ get '/' do
 end
 
 get '/:name' do
-  read_file(params['name'])
+  erb :view, locals: { name: 'hoge', json: read_file(params['name']) }
 end
 
 get '/:name/add' do
