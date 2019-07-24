@@ -6,8 +6,15 @@ require 'json'
 OBJECTS_DIR_PATH = './objects'
 MAIN_BRANCH_NAME = 'master'
 
+def ref_path(name)
+  File.join(OBJECTS_DIR_PATH, name, MAIN_BRANCH_NAME)
+end
+
 def master_path(name)
-  hash = Digest::SHA1.hexdigest(MAIN_BRANCH_NAME)
+  hash = nil
+  File.open(ref_path(name)) do |f|
+    hash = f.read.chomp
+  end
   File.join(OBJECTS_DIR_PATH, name, hash)
 end
 
@@ -43,8 +50,13 @@ def add_file(name, key, val)
   json[key] = val
 
   hash = Digest::SHA1.hexdigest(json.to_json)
-  File.open(resource_path(name, hash), 'w') do |f|
+  path = resource_path(name, hash)
+  File.open(path, 'w') do |f|
     f.write(json.to_json)
+  end
+
+  File.open(ref_path(name), 'w') do |f|
+    f.write(hash)
   end
 end
 
