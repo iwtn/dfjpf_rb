@@ -65,7 +65,8 @@ get '/' do
 end
 
 get '/:name' do
-  erb :view, locals: { name: 'hoge', json: read_file(params['name']) }
+  json_hash = JSON.parse(read_file(params['name']))
+  erb :view, locals: { name: 'hoge', json: JSON.pretty_generate(json_hash) }
 end
 
 get '/:name/add' do
