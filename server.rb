@@ -3,11 +3,12 @@ require "sinatra/reloader" if development?
 require 'digest/sha1'
 require 'json'
 
-OBJECTS_DIR_PATH = './objects'
+OBJECTS_DIR_PATH = 'objects'
+REF_DIR_PATH = 'refs'
 MAIN_BRANCH_NAME = 'master'
 
 def ref_path(name)
-  File.join(OBJECTS_DIR_PATH, name, MAIN_BRANCH_NAME)
+  File.join(OBJECTS_DIR_PATH, name, REF_DIR_PATH, MAIN_BRANCH_NAME)
 end
 
 def master_path(name)
