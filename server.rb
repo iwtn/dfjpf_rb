@@ -5,10 +5,10 @@ require 'json'
 
 OBJECTS_DIR_PATH = 'objects'
 REF_DIR_PATH = 'refs'
-MAIN_BRANCH_NAME = 'master'
+MAIN_BRANCH_NAME = 'HEAD'
 
 def ref_path(name)
-  File.join(OBJECTS_DIR_PATH, name, REF_DIR_PATH, MAIN_BRANCH_NAME)
+  File.join(OBJECTS_DIR_PATH, name, MAIN_BRANCH_NAME)
 end
 
 def master_path(name)
