@@ -61,8 +61,12 @@ def add_file(name, key, val)
   end
 end
 
+def resources
+  Dir.glob("#{OBJECTS_DIR_PATH}/*").map { |r| File.basename(r) }
+end
+
 get '/' do
-  'Hello world!'
+  erb :top, locals: { resources: resources, host: request.host }
 end
 
 get '/:name' do
