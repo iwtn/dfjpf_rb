@@ -65,8 +65,21 @@ def resources
   Dir.glob("#{OBJECTS_DIR_PATH}/*").map { |r| File.basename(r) }
 end
 
+def new_resource(name)
+  Dir.mkdir(dir(name), 0666)
+end
+
 get '/' do
   erb :top, locals: { resources: resources, host: request.host }
+end
+
+get '/add' do
+  erb :new_resource
+end
+
+post '/post' do
+  new_resource(params[:name])
+  redirect "/", 303
 end
 
 get '/:name' do
