@@ -7,6 +7,16 @@ OBJECTS_DIR_PATH = 'objects'
 REF_DIR_PATH = 'refs'
 MAIN_BRANCH_NAME = 'HEAD'
 
+OBJECT_NAME = 'object'
+LIST_NAME = 'list'
+EMPTY_OBJECT = '{}'
+EMPTY_LIST = '[]'
+
+DEFAULT_RESOUCE_MAP = {
+  OBJECT_NAME => EMPTY_OBJECT,
+  LIST_NAME => EMPTY_LIST,
+}
+
 def ref_path(name)
   File.join(OBJECTS_DIR_PATH, name, MAIN_BRANCH_NAME)
 end
@@ -65,10 +75,9 @@ def resources
   Dir.glob("#{OBJECTS_DIR_PATH}/*").map { |r| File.basename(r) }
 end
 
-def new_resource(name)
+def new_resource(name, empty_json)
   Dir.mkdir(dir(name))
 
-  empty_json = '{}'
   hash = Digest::SHA1.hexdigest(empty_json)
 
   File.open(resource_path(name, hash), 'w') do |f|
@@ -85,11 +94,16 @@ get '/' do
 end
 
 get '/add' do
-  erb :new_resource
+  erb :new_resource, locals: { type: OBJECT_NAME }
+end
+
+get '/add_list' do
+  erb :new_resource, locals: { type: LIST_NAME }
 end
 
 post '/post' do
-  new_resource(params[:name])
+  empty_json = DEFAULT_RESOUCE_MAP[params[:type]]
+  new_resource(params[:name], empty_json)
   redirect "/", 303
 end
 
