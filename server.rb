@@ -66,7 +66,18 @@ def resources
 end
 
 def new_resource(name)
-  Dir.mkdir(dir(name), 0666)
+  Dir.mkdir(dir(name))
+
+  empty_json = '{}'
+  hash = Digest::SHA1.hexdigest(empty_json)
+
+  File.open(resource_path(name, hash), 'w') do |f|
+    f.write empty_json
+  end
+
+  File.open(ref_path(name), 'w') do |f|
+    f.write(hash)
+  end
 end
 
 get '/' do
